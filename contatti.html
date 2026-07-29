@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contatti | Brixia Fly Official</title>
+  <meta name="description" content="Scrivici: hai domande, suggerimenti o vuoi partecipare al Brixia Fly Day? Contattaci.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="brand">Brixia<span>Fly</span></a>
+      <button class="nav-toggle" aria-label="Apri menu" aria-expanded="false" aria-controls="nav"><span></span></button>
+      <nav class="nav" id="nav" aria-label="Navigazione principale">
+        <a href="index.html">Home</a>
+        <a href="chi-siamo.html">Chi Siamo</a>
+        <a href="location.html">Location</a>
+        <a href="espositori.html">Espositori</a>
+        <a href="programma.html">Programma</a>
+        <a href="contatti.html" aria-current="page">Contatti</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero hero--inner">
+      <div class="hero__bg"><img src="assets/img/hero-inner.svg" alt=""></div>
+      <div class="container">
+        <div class="hero__inner">
+          <span class="eyebrow reveal in">Scrivici</span>
+          <h1 class="reveal in" data-delay="1">Contatti</h1>
+          <p class="hero__subtitle reveal in" data-delay="2">Hai domande, suggerimenti o vuoi partecipare? Non esitare a contattarci.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section darker section--tight">
+      <div class="container">
+        <div class="quote reveal">
+          <blockquote>“…Quanta arte solo per prendere un pesce.”</blockquote>
+          <cite>Arturo Pugno</cite>
+        </div>
+      </div>
+    </section>
+
+    <section class="section dark">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- FORM -->
+          <div class="reveal">
+            <span class="eyebrow">Contattaci</span>
+            <h2 style="font-size:clamp(1.8rem,3.5vw,2.6rem);color:var(--white);margin-bottom:1.6rem">Inviaci un messaggio</h2>
+            <form class="form" novalidate>
+              <div class="row">
+                <div class="field">
+                  <label for="nome">Nome</label>
+                  <input type="text" id="nome" name="nome" autocomplete="given-name">
+                </div>
+                <div class="field">
+                  <label for="cognome">Cognome</label>
+                  <input type="text" id="cognome" name="cognome" autocomplete="family-name">
+                </div>
+              </div>
+              <div class="field">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required autocomplete="email">
+              </div>
+              <div class="field">
+                <label for="messaggio">Messaggio *</label>
+                <textarea id="messaggio" name="messaggio" required></textarea>
+              </div>
+              <div class="form-success" role="status">Grazie! Il tuo messaggio è stato inviato. Ti risponderemo al più presto.</div>
+              <button type="submit" class="btn btn--gold">Invia</button>
+              <p class="form-note">* Campi obbligatori. I dati saranno trattati secondo la nostra <a href="privacy-policy.html" style="color:var(--gold)">Privacy Policy</a>.</p>
+            </form>
+          </div>
+
+          <!-- INFO -->
+          <div class="contact-info reveal" data-delay="1">
+            <div class="block">
+              <h4>Dove siamo</h4>
+              <p>Calvisano (BS), Italia</p>
+              <p>Lombardia</p>
+            </div>
+            <div class="block">
+              <h4>Email</h4>
+              <p><a href="mailto:info@brixiafly.it">info@brixiafly.it</a></p>
+            </div>
+            <div class="block">
+              <h4>Telefono</h4>
+              <p><a href="tel:+393513678979">+39 351 3678979</a></p>
+            </div>
+            <div class="block">
+              <h4>Seguici</h4>
+              <div class="socials" style="margin-top:.6rem">
+                <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+                <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="brand">Brixia<span>Fly</span></a>
+          <p>Indipendent Fly Fishing Festival — nato dalla passione genuina per la pesca a mosca. Calvisano (BS), Italia.</p>
+          <div class="socials">
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Naviga</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="chi-siamo.html">Chi Siamo</a></li>
+            <li><a href="location.html">Location</a></li>
+            <li><a href="espositori.html">Espositori</a></li>
+            <li><a href="programma.html">Programma</a></li>
+            <li><a href="contatti.html">Contatti</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contatti</h4>
+          <ul>
+            <li>Calvisano (BS), Italia</li>
+            <li><a href="mailto:info@brixiafly.it">info@brixiafly.it</a></li>
+            <li><a href="tel:+393513678979">+39 351 3678979</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© <span data-year>2026</span> Brixia Fly Day · Sponsored by Golduck</p>
+        <nav aria-label="Note legali">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+          <a href="#">Termini &amp; Condizioni</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
