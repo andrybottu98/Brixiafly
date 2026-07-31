@@ -27,6 +27,21 @@
     });
   }
 
+  /* ---- Statement: ogni parola in uno span, per la comparsa a cascata ---- */
+  document.querySelectorAll(".statement").forEach(function (el) {
+    var words = el.textContent.trim().split(/\s+/);
+    el.textContent = "";
+    words.forEach(function (word, i) {
+      var span = document.createElement("span");
+      span.className = "statement__w";
+      span.style.setProperty("--i", i);
+      span.textContent = word;
+      el.appendChild(span);
+      if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+    });
+    el.style.setProperty("--words", words.length);
+  });
+
   /* ---- Scroll reveal ---- */
   var reveals = document.querySelectorAll(".reveal");
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

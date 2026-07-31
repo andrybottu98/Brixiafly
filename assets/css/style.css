@@ -26,6 +26,9 @@
   --header-h: 78px;
   --radius: 30px;
   --ease: cubic-bezier(.22,.61,.36,1);
+
+  /* spazio vuoto sopra e sotto il blocco statement — unica manopola */
+  --statement-space: clamp(2.5rem, 5vw, 4rem);
 }
 
 /* ----- Reset ----- */
@@ -101,7 +104,7 @@ h1,h2,h3,h4 { font-family: var(--font-serif); font-weight: 700; line-height: 1.1
   text-transform: uppercase;
 }
 .brand span { color: var(--gold); }
-.site-header.scrolled { background: rgba(23,27,24,.92); backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--line); }
+.site-header.scrolled { background: rgba(23,27,24,.78); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
 
 .nav { display: flex; align-items: center; gap: 2rem; }
 .nav a {
@@ -195,6 +198,34 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 }
 .card__icon svg { width: 34px; height: 34px; }
 
+/* Photo card — foto in alto, titolo oro, testo (sezione "Il nostro spirito") */
+.card--photo {
+  --card-pad: clamp(1rem, 1.6vw, 1.4rem);   /* margine tra bordo scheda, foto e testo */
+  --card-ratio: 16 / 9;                     /* proporzione della foto */
+  display: flex; flex-direction: column;
+  background: var(--white);
+  border-color: transparent;
+  border-radius: 26px;
+  padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) + .8rem);
+  box-shadow: 0 18px 40px rgba(0,0,0,.18);
+}
+.dark .card--photo:hover {
+  background: var(--white); border-color: transparent;
+  box-shadow: 0 26px 54px rgba(0,0,0,.26);
+}
+.card__media { border-radius: 16px; overflow: hidden; background: var(--bg-dark-2); }
+.card__media img { width: 100%; aspect-ratio: var(--card-ratio); object-fit: cover; }
+.card--photo h3 {
+  font-family: var(--font-serif); color: var(--gold);
+  font-size: clamp(1.45rem, 2.3vw, 1.9rem);
+  margin: clamp(1.4rem, 2.4vw, 2rem) 0 0;
+}
+.card--photo p {
+  font-family: var(--font-serif); color: var(--ink-soft);
+  font-size: 1.02rem; line-height: 1.65;
+  margin: clamp(.9rem, 1.6vw, 1.3rem) 0 0;
+}
+
 /* Split (image + text) */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
 .split--reverse .split__media { order: 2; }
@@ -226,6 +257,50 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
   background: rgba(255,255,255,.02);
 }
 .chip:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(205,164,52,.07); }
+
+/* Statement — testo manifesto in oro con filetti sopra e sotto */
+.section--statement { padding-block: var(--statement-space); }
+.section--statement + .section { padding-top: 0; }   /* evita che il padding della sezione seguente si sommi */
+.statement {
+  --stagger: 38ms;   /* ritardo fra una parola e la successiva */
+  --lead-in: 180ms;  /* attesa prima che parta la prima parola */
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.45rem, 3.2vw, 2.35rem);
+  line-height: 1.4;
+  color: var(--gold);
+  max-width: 52ch;
+  margin-inline: auto;
+}
+.statement::before,
+.statement::after {
+  content: "";
+  display: block;
+  width: clamp(80px, 10vw, 128px);
+  height: 1px;
+  margin-inline: auto;
+  background: var(--gold);
+  opacity: .6;
+}
+/* Comparsa progressiva: i filetti si tracciano, le parole salgono a cascata.
+   Il blocco non si anima come un tutt'uno (le parti hanno vita propria). */
+.statement.reveal { opacity: 1; transform: none; transition: none; }
+.statement::before,
+.statement::after { transform: scaleX(0); transition: transform .9s var(--ease); }
+.statement.in::before { transform: scaleX(1); }
+.statement.in::after  { transform: scaleX(1); transition-delay: calc(var(--lead-in) + var(--words, 24) * var(--stagger)); }
+.statement__w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(.4em);
+  filter: blur(6px);
+  transition: opacity .75s var(--ease), transform .75s var(--ease), filter .75s var(--ease);
+  transition-delay: calc(var(--lead-in) + var(--i) * var(--stagger));
+}
+.statement.in .statement__w { opacity: 1; transform: none; filter: none; }
+
+.statement::before { margin-bottom: clamp(1.8rem, 5vw, 2.6rem); }
+.statement::after  { margin-top: clamp(1.8rem, 5vw, 2.6rem); }
 
 /* Quote */
 .quote { text-align: center; max-width: 780px; margin-inline: auto; }
@@ -340,5 +415,9 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  .statement { --stagger: 0ms; --lead-in: 0ms; }
+  .statement__w { opacity: 1; transform: none; filter: none; transition: none; }
+  .statement::before,
+  .statement::after { transform: none; transition: none; }
   .scroll-cue::after { animation: none; }
 }

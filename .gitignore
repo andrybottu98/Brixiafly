@@ -1,0 +1,29 @@
+# Impostazioni locali di Claude Code (personali, non condivise)
+.claude/settings.local.json
+
+# Sistema operativo
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+# Eventuale tooling locale (es. `npx serve`)
+node_modules/
+npm-debug.log*
+.cache/
+
+# File temporanei / backup
+*.bak
+*.tmp
+*.log
+
+# Immagini originali non ottimizzate (cartella di lavoro, non va pubblicata)
+assets/img/_originali/
