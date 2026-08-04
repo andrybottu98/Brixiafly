@@ -5,13 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home | Brixia Fly Official</title>
   <meta name="description" content="Brixia Fly Day — Indipendent Fly Fishing Festival. Nato dalla passione genuina per la pesca a mosca. Calvisano (BS), Italia — 2027. Ingresso gratuito.">
+  <link rel="canonical" href="https://www.brixiafly.it/">
+
+  <!-- Icone -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#1f2521">
+
+  <!-- Anteprima nelle condivisioni (WhatsApp, Facebook, Instagram, X) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Brixia Fly Day">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Brixia Fly Day — Indipendent Fly Fishing Festival">
+  <meta property="og:description" content="Nato dalla passione genuina per la pesca a mosca. Calvisano (BS), Italia — 2027. Ingresso gratuito.">
+  <meta property="og:url" content="https://www.brixiafly.it/">
+  <meta property="og:image" content="https://www.brixiafly.it/assets/img/og-brixiafly.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Il marchio del Brixia Fly Day: la Vittoria Alata di Brescia che lancia a mosca">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/main.js" defer></script>
+
+  <!-- Dati strutturati -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Brixia Fly Day",
+    "alternateName": "Brixia Fly",
+    "url": "https://www.brixiafly.it/",
+    "logo": "https://www.brixiafly.it/assets/img/icon-512.png",
+    "image": "https://www.brixiafly.it/assets/img/og-brixiafly.png",
+    "description": "Indipendent Fly Fishing Festival — nato dalla passione genuina per la pesca a mosca. Calvisano (BS), Italia.",
+    "email": "info@brixiafly.it",
+    "telephone": "+39 351 3678979",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Calvisano",
+      "addressRegion": "BS",
+      "addressCountry": "IT"
+    }
+  }
+  </script>
+
+  <!-- Scheda evento per Google: pronta, manca solo la data del 2027.
+       Appena è ufficiale, togli questo commento e compila startDate ed endDate
+       (formato ISO, es. "2027-01-16"). Senza startDate Google scarta la scheda,
+       per questo non è già attiva.
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "Brixia Fly Day 2027",
+    "description": "Indipendent Fly Fishing Festival. Ingresso gratuito.",
+    "startDate": "2027-01-00",
+    "endDate": "2027-01-00",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "image": "https://www.brixiafly.it/assets/img/og-brixiafly.png",
+    "location": {
+      "@type": "Place",
+      "name": "Sala Polivalente Santa Beata Cristina",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Calvisano",
+        "addressRegion": "BS",
+        "addressCountry": "IT"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "Brixia Fly Day",
+      "url": "https://www.brixiafly.it/"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "availability": "https://schema.org/InStock",
+      "url": "https://www.brixiafly.it/"
+    }
+  }
+  </script>
+  -->
 </head>
 <body>
+
+  <a class="skip-link" href="#contenuto">Salta al contenuto</a>
 
   <!-- HEADER -->
   <header class="site-header">
@@ -29,13 +117,26 @@
     </div>
   </header>
 
-  <main>
+  <main id="contenuto">
     <!-- HERO -->
     <section class="hero">
-      <div class="hero__bg"><img src="assets/img/hero-home.svg" alt=""></div>
+      <div class="hero__bg">
+        <!-- Il fermo immagine è il primo fotogramma del video: è lui l'elemento
+             che decide la velocità percepita della home, quindi resta sempre. -->
+        <picture>
+          <source srcset="assets/img/hero-home.avif" type="image/avif">
+          <source srcset="assets/img/hero-home.webp" type="image/webp">
+          <img src="assets/img/hero-home.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+        </picture>
+        <!-- Il video si sovrappone solo da schermo largo, senza reduced motion e
+             senza risparmio dati attivo: altrove non viene nemmeno scaricato.
+             La sorgente sta in data-video proprio per questo. -->
+        <video class="hero__video" muted loop playsinline preload="none" aria-hidden="true"
+               width="1600" height="900" data-video="assets/video/hero-brixiafly.mp4"></video>
+      </div>
       <div class="container">
         <div class="hero__inner">
-          <h1 class="reveal in">Brixia Fly Day</h1>
+          <h1 class="reveal in" data-split>Brixia Fly Day</h1>
           <p class="hero__subtitle reveal in" data-delay="1">Indipendent Fly Fishing Festival</p>
           <p class="hero__sponsor reveal in" data-delay="2">Sponsored by Golduck</p>
           <div class="hero__actions reveal in" data-delay="3">
@@ -44,6 +145,13 @@
           </div>
         </div>
       </div>
+      <!-- Comando di pausa: un video che parte da solo e dura più di 5 secondi
+           deve poter essere fermato (WCAG 2.2.2). Lo mostra il JS solo quando
+           il video sta effettivamente andando. -->
+      <button class="hero__motion" type="button" hidden aria-label="Metti in pausa il video di sfondo">
+        <svg class="hero__motion-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+        <svg class="hero__motion-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+      </button>
       <span class="scroll-cue" aria-hidden="true"></span>
     </section>
 
@@ -63,25 +171,34 @@
         </div>
         <div class="grid grid-3">
           <article class="card card--photo reveal" data-delay="1">
-            <!-- ► IMMAGINE 1 — sostituisci src (e alt) qui sotto. Consigliato: foto 1600×900 (16:9), .jpg o .webp -->
             <div class="card__media">
-              <img src="assets/img/placeholder-wide.svg" alt="Una mosca artificiale montata a mano" loading="lazy">
+              <picture>
+                <source srcset="assets/img/card-missione.avif" type="image/avif">
+                <source srcset="assets/img/card-missione.webp" type="image/webp">
+                <img src="assets/img/card-missione.jpg" alt="Un martin pescatore si alza in volo dall'acqua" width="900" height="506" loading="lazy" decoding="async">
+              </picture>
             </div>
             <h3>La Missione</h3>
             <p>Creare un nuovo spazio interamente dedicato alla pesca a mosca e a tutte le tecniche affini.</p>
           </article>
           <article class="card card--photo reveal" data-delay="2">
-            <!-- ► IMMAGINE 2 — sostituisci src (e alt) qui sotto. Consigliato: foto 1600×900 (16:9), .jpg o .webp -->
             <div class="card__media">
-              <img src="assets/img/placeholder-wide.svg" alt="Pescatore a mosca in un torrente di montagna" loading="lazy">
+              <picture>
+                <source srcset="assets/img/card-esperienza.avif" type="image/avif">
+                <source srcset="assets/img/card-esperienza.webp" type="image/webp">
+                <img src="assets/img/card-esperienza.jpg" alt="Pescatore a mosca in guado in un torrente alpino, fra le montagne" width="900" height="506" loading="lazy" decoding="async">
+              </picture>
             </div>
             <h3>L'Esperienza</h3>
             <p>Le persone vengono al Brixia Fly per condividere, incontrarsi e parlare. È un luogo dove nascono amicizie, l'arte della pesca a mosca viene tramandata e i legami duraturi si rafforzano.</p>
           </article>
           <article class="card card--photo reveal" data-delay="3">
-            <!-- ► IMMAGINE 3 — sostituisci src (e alt) qui sotto. Consigliato: foto 1600×900 (16:9), .jpg o .webp -->
             <div class="card__media">
-              <img src="assets/img/placeholder-wide.svg" alt="Il pubblico del Brixia Fly Day nella sala espositiva" loading="lazy">
+              <picture>
+                <source srcset="assets/img/card-comunita.avif" type="image/avif">
+                <source srcset="assets/img/card-comunita.webp" type="image/webp">
+                <img src="assets/img/card-comunita.jpg" alt="Il pubblico del Brixia Fly Day affollato nella sala espositiva" width="900" height="506" loading="lazy" decoding="async">
+              </picture>
             </div>
             <h3>La Comunità</h3>
             <p>Fai parte di una comunità vibrante e libera, senza vincoli commerciali. Condividi la tua storia attraverso le nostre comunicazioni ufficiali.</p>
@@ -95,7 +212,11 @@
       <div class="container">
         <div class="split">
           <div class="split__media reveal">
-            <img src="assets/img/placeholder-wide.svg" alt="Sala Polivalente di Calvisano">
+            <picture>
+              <source srcset="assets/img/evento-fiume.avif" type="image/avif">
+              <source srcset="assets/img/evento-fiume.webp" type="image/webp">
+              <img src="assets/img/evento-fiume.jpg" alt="Pescatore a mosca lancia sulla riva di un fiume immerso nel verde" width="1200" height="800" loading="lazy" decoding="async">
+            </picture>
           </div>
           <div class="reveal" data-delay="1">
             <span class="eyebrow">Info Evento</span>

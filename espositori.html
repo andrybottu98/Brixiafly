@@ -5,13 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Espositori | Brixia Fly Official</title>
   <meta name="description" content="La comunità del Brixia Fly Day: artigiani, scuole, produttori e appassionati che condividono la stessa fiamma.">
+  <link rel="canonical" href="https://www.brixiafly.it/espositori.html">
+
+  <!-- Icone -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#1f2521">
+
+  <!-- Anteprima nelle condivisioni -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Brixia Fly Day">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Espositori — Brixia Fly Day">
+  <meta property="og:description" content="Artigiani, scuole, produttori e appassionati che condividono la stessa fiamma.">
+  <meta property="og:url" content="https://www.brixiafly.it/espositori.html">
+  <meta property="og:image" content="https://www.brixiafly.it/assets/img/og-brixiafly.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Il marchio del Brixia Fly Day: la Vittoria Alata di Brescia che lancia a mosca">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/main.js" defer></script>
 </head>
 <body>
+
+  <a class="skip-link" href="#contenuto">Salta al contenuto</a>
 
   <header class="site-header">
     <div class="container">
@@ -28,13 +52,13 @@
     </div>
   </header>
 
-  <main>
+  <main id="contenuto">
     <section class="hero hero--inner">
-      <div class="hero__bg"><img src="assets/img/hero-inner.svg" alt=""></div>
+      <div class="hero__bg"><img src="assets/img/hero-inner.svg" alt="" fetchpriority="high" decoding="async"></div>
       <div class="container">
         <div class="hero__inner">
           <span class="eyebrow reveal in">La Comunità</span>
-          <h1 class="reveal in" data-delay="1">Espositori</h1>
+          <h1 class="reveal in" data-delay="1" data-split>Espositori</h1>
           <p class="hero__subtitle reveal in" data-delay="2">Artigiani, scuole, produttori e appassionati che condividono la stessa fiamma</p>
         </div>
       </div>
@@ -59,18 +83,16 @@
           <div class="chip reveal" data-delay="1">Associazioni</div>
           <div class="chip reveal" data-delay="2">Casting</div>
           <div class="chip reveal" data-delay="3">Arte e Letteratura</div>
-        </div>
-        <div class="chips" style="margin-top:1.2rem;grid-template-columns:1fr;max-width:420px;margin-inline:auto">
-          <div class="chip reveal" data-delay="1">Special Guest</div>
+          <div class="chip chip--wide reveal" data-delay="1">Special Guest</div>
         </div>
       </div>
     </section>
 
     <section class="section darker center">
       <div class="container">
-        <div class="reveal">
-          <h2 style="font-size:clamp(1.8rem,4vw,2.8rem);color:var(--white);margin-bottom:1rem">Vuoi partecipare?</h2>
-          <p class="lead measure mx-auto" style="margin-bottom:2rem">Contattaci per unirti alla nostra comunità e portare la tua storia al Brixia Fly Day.</p>
+        <div class="cta reveal">
+          <h2>Vuoi partecipare?</h2>
+          <p class="lead measure mx-auto">Contattaci per unirti alla nostra comunità e portare la tua storia al Brixia Fly Day.</p>
           <a href="contatti.html" class="btn btn--gold">Contattaci</a>
         </div>
       </div>

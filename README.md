@@ -56,8 +56,9 @@ brixiafly-clone/
 | Verde scuro (sfondo) | `#1F2521` |
 | Verde più profondo | `#171B18` |
 | Oro (accento) | `#CDA434` |
+| Oro per fondi chiari | `#7A5C10` |
 | Crema (testo su scuro) | `#EFE9DC` |
-| Titoli | Hedvig Letters Serif |
+| Titoli | Fraunces (variabile) |
 | Corpo | Manrope |
 
 I colori e le altre costanti sono variabili CSS in `:root`, in cima a `style.css`: modifica lì per

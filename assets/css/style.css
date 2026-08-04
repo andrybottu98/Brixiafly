@@ -1,7 +1,7 @@
 /* =====================================================================
    BRIXIA FLY DAY — clone statico
    Palette:  verde scuro #1F2521 · oro #CDA434 · crema #EFE9DC · bianco
-   Font:     Hedvig Letters Serif (titoli) · Manrope (corpo)
+   Font:     Fraunces (titoli, variabile: opsz/wght/SOFT/WONK) · Manrope (corpo)
    ===================================================================== */
 
 /* ----- Design tokens ----- */
@@ -11,6 +11,9 @@
   --bg-dark-2:  #232a25;
   --gold:       #cda434;
   --gold-dark:  #c0a123;
+  /* oro per i fondi chiari: l'oro pieno su crema si ferma a 1.9:1, questo arriva
+     a 5.2:1 su crema e 6.2:1 su bianco (WCAG AA richiede 4.5:1) */
+  --gold-ink:   #7a5c10;
   --cream:      #efe9dc;
   --cream-dim:  #d8d2c6;
   --white:      #ffffff;
@@ -18,14 +21,30 @@
   --ink-soft:   #4a4f4b;
   --line:       rgba(205,164,52,.28);
 
-  --font-serif: "Hedvig Letters Serif", Georgia, "Times New Roman", serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
   --font-sans:  "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Scala tipografica fluida: sei gradini, un solo posto dove regolarli.
+     Ogni titolo del sito pesca da qui — niente più clamp() sparsi nel file o nell'HTML. */
+  --step-1: clamp(1.1rem, 1.02rem + .35vw, 1.35rem);  /* lead, occhielli lunghi */
+  --step-2: clamp(1.4rem, 1.25rem + .6vw,  1.9rem);   /* h3: card, chip, travel, h2 legali */
+  --step-3: clamp(1.6rem, 1.35rem + 1.1vw, 2.6rem);   /* h2 secondari, statement, citazione */
+  --step-4: clamp(2rem,   1.6rem + 1.7vw,  3.2rem);   /* h2 di sezione, h1 pagine legali */
+  --step-5: clamp(2.4rem, 1.9rem + 2.1vw,  4rem);     /* h1 pagine interne */
+  --step-6: clamp(2.8rem, 1.9rem + 4vw,    5.4rem);   /* h1 hero della home */
 
   --container: 1200px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
   --header-h: 78px;
   --radius: 30px;
   --ease: cubic-bezier(.22,.61,.36,1);
+
+  /* colore dell'anello di focus: scuro di default, riassegnato in oro sui fondi scuri */
+  --focus: var(--gold-ink);
+
+  /* ritmo della comparsa parola per parola — vale sia per lo statement sia per l'h1 dell'hero */
+  --stagger: 38ms;   /* ritardo fra una parola e la successiva */
+  --lead-in: 180ms;  /* attesa prima che parta la prima parola */
 
   /* spazio vuoto sopra e sotto il blocco statement — unica manopola */
   --statement-space: clamp(2.5rem, 5vw, 4rem);
@@ -34,7 +53,7 @@
 /* ----- Reset ----- */
 *,*::before,*::after { box-sizing: border-box; }
 * { margin: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
 body {
   font-family: var(--font-sans);
   font-size: 17px;
@@ -45,34 +64,81 @@ body {
   overflow-x: hidden;
 }
 img { max-width: 100%; display: block; height: auto; }
+picture { display: block; }
+p { text-wrap: pretty; }   /* evita l'ultima riga con una parola sola */
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; padding: 0; }
 button { font: inherit; cursor: pointer; }
-h1,h2,h3,h4 { font-family: var(--font-serif); font-weight: 700; line-height: 1.12; }
+/* Fraunces è variabile: 600 è un semibold reale, non il grassetto sintetico di prima.
+   font-optical-sizing assottiglia le grazie nei titoli grandi e le ingrossa in quelli piccoli. */
+h1,h2,h3,h4 {
+  font-family: var(--font-serif); font-weight: 600;
+  line-height: 1.12; letter-spacing: -.01em;
+  font-optical-sizing: auto;
+  text-wrap: balance;   /* distribuisce le righe invece di lasciare una parola orfana */
+}
+
+/* ----- Focus da tastiera ----- */
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 3px; }
+/* sui fondi scuri l'anello passa all'oro pieno, sulle schede chiare torna scuro */
+.dark, .darker, .hero, .site-header, .site-footer { --focus: var(--gold); }
+.card--light, .card--photo { --focus: var(--gold-ink); }
+
+/* ----- Skip link ----- */
+.skip-link {
+  position: fixed; top: .5rem; left: var(--gutter); z-index: 100;
+  transform: translateY(-250%);
+  padding: .7rem 1.2rem; border-radius: 10px;
+  background: var(--gold); color: #241d05;
+  font-weight: 700; font-size: .9rem;
+  transition: transform .25s var(--ease);
+}
+.skip-link:focus { transform: none; }
 
 /* ----- Layout helpers ----- */
 .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
 .section { padding-block: clamp(4rem, 9vw, 8rem); }
 .section--tight { padding-block: clamp(3rem, 6vw, 5rem); }
 .dark  { background: var(--bg-dark); color: var(--cream); }
-.dark h1,.dark h2,.dark h3 { color: var(--white); }
 .darker { background: var(--bg-darker); color: var(--cream); }
+/* .dark e .darker sono due fondi scuri diversi ma con lo stesso trattamento del testo:
+   ogni regola di colore va scritta per entrambi, altrimenti su .darker resta il colore
+   pensato per il fondo chiaro (era il caso di .lead e .section-head p: 2.05:1). */
+.dark h1, .dark h2, .dark h3,
+.darker h1, .darker h2, .darker h3 { color: var(--white); }
+
+/* Grana finissima sulle sole sezioni scure: dà il senso della carta stampata e
+   maschera il banding dei gradienti. È un'immagine tassellata, non un filtro:
+   costa una rasterizzazione e basta. Non tocca body.dark delle pagine legali. */
+.section.dark, .section.darker { position: relative; }
+.section.dark::after, .section.darker::after {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  pointer-events: none; opacity: .04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.section.dark > .container, .section.darker > .container { position: relative; z-index: 1; }
 .eyebrow {
   font-family: var(--font-sans);
   font-size: .8rem; font-weight: 700;
   letter-spacing: .28em; text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-ink);   /* default = fondo chiaro */
   margin-bottom: 1.1rem; display: inline-block;
 }
-.lead { font-size: clamp(1.05rem, 1.6vw, 1.35rem); line-height: 1.65; color: var(--ink-soft); }
-.dark .lead { color: var(--cream-dim); }
+.dark .eyebrow, .darker .eyebrow, .hero .eyebrow { color: var(--gold); }
+/* le schede chiare restano chiare anche dentro una sezione scura */
+.card--light .eyebrow, .card--photo .eyebrow { color: var(--gold-ink); }
+.lead { font-size: var(--step-1); line-height: 1.65; color: var(--ink-soft); }
+.dark .lead, .darker .lead { color: var(--cream-dim); }
 .measure { max-width: 62ch; }
 .center { text-align: center; }
 .mx-auto { margin-inline: auto; }
 
 /* ----- Buttons ----- */
 .btn {
-  display: inline-flex; align-items: center; gap: .5rem;
+  /* justify-content serve quando il bottone viene stirato dal contenitore —
+     nel form è una cella di griglia, quindi occupa tutta la larghezza e senza
+     questa riga il testo resterebbe agganciato a un lato invece che al centro */
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
   padding: .85rem 1.8rem;
   border-radius: var(--radius);
   font-weight: 700; font-size: .95rem;
@@ -99,12 +165,38 @@ h1,h2,h3,h4 { font-family: var(--font-serif); font-weight: 700; line-height: 1.1
 }
 .site-header .container { display: flex; align-items: center; justify-content: space-between; }
 .brand {
-  font-family: var(--font-serif); font-weight: 700;
-  font-size: 1.3rem; letter-spacing: .14em; color: var(--white);
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: 1.3rem; letter-spacing: .1em; color: var(--white);
   text-transform: uppercase;
 }
 .brand span { color: var(--gold); }
 .site-header.scrolled { background: rgba(23,27,24,.78); backdrop-filter: blur(14px); box-shadow: 0 1px 0 var(--line); }
+
+/* Velo scuro in cima: finché l'header è trasparente il menu bianco appoggia
+   direttamente sulla foto dell'hero, e su uno scatto luminoso sparisce.
+   Si dissolve quando l'header prende il suo fondo solido. */
+.site-header::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 180%;
+  background: linear-gradient(180deg, rgba(10,13,11,.6), transparent);
+  pointer-events: none; z-index: -1;
+  transition: opacity .35s var(--ease);
+}
+.site-header.scrolled::before { opacity: 0; }
+
+/* Filo d'oro di avanzamento lettura, legato allo scroll e senza una riga di JS.
+   Dove le scroll-driven animation non ci sono, semplicemente non compare. */
+@supports (animation-timeline: scroll()) {
+  .site-header::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
+    background: var(--gold); transform: scaleX(0); transform-origin: 0 50%;
+    animation-name: read-progress;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-duration: auto;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes read-progress { to { transform: scaleX(1); } }
+}
 
 .nav { display: flex; align-items: center; gap: 2rem; }
 .nav a {
@@ -134,33 +226,91 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 /* =====================================================================
    HERO
    ===================================================================== */
+/* isolation crea uno stacking context locale: sfondo e velo restano dentro l'hero
+   invece di finire dietro al body (com'era con gli z-index negativi) */
 .hero {
-  position: relative; min-height: 100svh;
+  position: relative; isolation: isolate; overflow: hidden; min-height: 100svh;
   display: flex; align-items: center;
   color: var(--white); text-align: center;
   padding-top: var(--header-h);
 }
 .hero--inner { min-height: 68vh; }
-.hero__bg { position: absolute; inset: 0; z-index: -2; }
+.hero > .container { position: relative; z-index: 2; }
+/* l'8% in più sopra e sotto è il margine di manovra della parallasse:
+   senza, scorrendo si scoprirebbe il bordo dello sfondo */
+.hero__bg { position: absolute; inset: -8% 0; z-index: 0; }
+.hero__bg picture { display: block; width: 100%; height: 100%; }
 .hero__bg img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Video di sfondo: sta sopra il fermo immagine e compare in dissolvenza solo
+   quando ha davvero iniziato a scorrere, così non si vede mai un buco nero. */
+.hero__video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity 1s var(--ease);
+}
+.hero__video.is-playing { opacity: 1; }
+
+/* Comando di pausa del video (WCAG 2.2.2). 44px: è anche un bersaglio touch. */
+.hero__motion {
+  position: absolute; z-index: 3;
+  right: clamp(1rem, 3vw, 2rem); bottom: clamp(1rem, 3vw, 2rem);
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(23,27,24,.55); border: 1px solid rgba(255,255,255,.35);
+  color: var(--white); backdrop-filter: blur(6px);
+  transition: background-color .25s var(--ease), border-color .25s var(--ease);
+}
+.hero__motion:hover { background: rgba(23,27,24,.85); border-color: var(--white); }
+.hero__motion svg { width: 18px; height: 18px; }
+.hero__motion .hero__motion-play { display: none; }
+.hero__motion.is-paused .hero__motion-pause { display: none; }
+.hero__motion.is-paused .hero__motion-play { display: block; }
+
+/* Parallasse legata allo scroll: lo sfondo resta indietro rispetto al testo.
+   `exit` copre esattamente il tratto in cui l'hero esce dallo schermo. */
+@supports (animation-timeline: view()) {
+  .hero__bg {
+    animation-name: hero-parallax;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-duration: auto;
+    animation-timeline: view();
+    animation-range: exit 0% exit 100%;
+  }
+  @keyframes hero-parallax { to { transform: translateY(8%); } }
+}
 .hero::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
+  content: ""; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(23,27,24,.55) 0%, rgba(23,27,24,.35) 40%, rgba(23,27,24,.85) 100%);
 }
 .hero__inner { max-width: 900px; margin-inline: auto; }
+/* tracking negativo: su un serif da display la spaziatura larga sfilaccia la parola */
 .hero h1 {
-  font-size: clamp(2.8rem, 8vw, 5.4rem);
-  letter-spacing: .08em; margin-bottom: 1rem;
+  font-size: var(--step-6); font-weight: 700;
+  letter-spacing: -.015em; margin-bottom: 1rem;
+  --stagger: 55ms; --lead-in: 150ms;
 }
-.hero--inner h1 { font-size: clamp(2.4rem, 6vw, 4rem); letter-spacing: .04em; }
+.hero--inner h1 { font-size: var(--step-5); letter-spacing: -.01em; }
+/* L'h1 è già in viewport al caricamento, quindi qui la comparsa è un'animazione
+   (parte da sola). Nello statement è invece una transizione, innescata dallo
+   scroll reveal. Nessun opacity:0 statico: se le animazioni sono disattivate
+   il titolo resta semplicemente visibile. */
+.hero h1 .word {
+  animation: word-in .9s var(--ease) both;
+  animation-delay: calc(var(--lead-in) + var(--i) * var(--stagger));
+}
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(.35em); filter: blur(8px); }
+}
 .hero__subtitle {
-  font-size: clamp(1rem, 2.2vw, 1.4rem); font-weight: 500;
+  font-size: var(--step-1); font-weight: 500;
   letter-spacing: .05em; color: var(--cream-dim); margin-bottom: .6rem;
 }
 .hero__sponsor { font-size: .8rem; letter-spacing: .32em; color: var(--gold); text-transform: uppercase; margin-bottom: 2.2rem; }
 .hero__actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 .scroll-cue {
-  position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+  position: absolute; bottom: 26px; left: 50%; z-index: 2; transform: translateX(-50%);
   width: 24px; height: 40px; border: 2px solid rgba(255,255,255,.5); border-radius: 14px;
 }
 .scroll-cue::after {
@@ -173,9 +323,17 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
    SECTION TITLES + GRIDS
    ===================================================================== */
 .section-head { max-width: 760px; margin: 0 auto clamp(2.5rem,5vw,4rem); text-align: center; }
-.section-head h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin-bottom: 1.1rem; }
-.section-head p { color: var(--ink-soft); font-size: 1.1rem; }
-.dark .section-head p { color: var(--cream-dim); }
+.section-head h2 { font-size: var(--step-4); margin-bottom: 1.1rem; }
+.section-head p { color: var(--ink-soft); font-size: var(--step-1); }
+
+/* Blocco di chiusura pagina: titolo + lead + bottone, centrati.
+   Sostituisce i clamp() e i margini che erano scritti inline nell'HTML. */
+.cta h1 { font-size: var(--step-4); margin-bottom: 1rem; }
+.cta h2 { font-size: var(--step-3); margin-bottom: 1rem; }
+.cta .lead { margin-bottom: 2rem; }
+/* prima sezione di una pagina senza hero (404, legali): scavalca l'header fisso */
+.section--top { padding-top: calc(var(--header-h) + 5rem); }
+.dark .section-head p, .darker .section-head p { color: var(--cream-dim); }
 
 .grid { display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
 .grid-2 { grid-template-columns: repeat(2, 1fr); }
@@ -188,15 +346,28 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
   border-radius: 16px; padding: 2.2rem 2rem;
   transition: transform .3s var(--ease), border-color .3s var(--ease), background-color .3s var(--ease);
 }
-.dark .card:hover { transform: translateY(-6px); border-color: var(--gold); background: rgba(205,164,52,.06); }
-.card--light { background: var(--white); border-color: rgba(0,0,0,.06); box-shadow: 0 10px 30px rgba(31,37,33,.06); }
+.dark .card:hover, .darker .card:hover { transform: translateY(-6px); border-color: var(--gold); background: rgba(205,164,52,.06); }
+.card--light { background: var(--white); border-color: rgba(0,0,0,.06); border-radius: 16px; box-shadow: 0 10px 30px rgba(31,37,33,.06); }
 .card--light:hover { transform: translateY(-6px); box-shadow: 0 18px 44px rgba(31,37,33,.12); }
-.card h3 { color: var(--gold); font-size: 1.5rem; margin-bottom: .8rem; }
+.card h3 { color: var(--gold); font-size: var(--step-2); margin-bottom: .8rem; }
 .card__icon {
   width: 52px; height: 52px; margin-bottom: 1.2rem; color: var(--gold);
   display: grid; place-items: center;
 }
 .card__icon svg { width: 34px; height: 34px; }
+/* Le icone si disegnano invece di comparire. --len è la lunghezza reale del
+   tracciato e la calcola main.js; se manca — perché l'utente ha chiesto meno
+   animazioni o perché il JS non gira — il fallback 0 toglie il tratteggio e
+   l'icona è già intera. */
+.card__icon svg :is(path, circle, line, rect, polyline, polygon) {
+  stroke-dasharray: var(--len, 0);
+  stroke-dashoffset: var(--len, 0);
+  transition: stroke-dashoffset 1.1s var(--ease) .15s;
+}
+.reveal.in .card__icon svg :is(path, circle, line, rect, polyline, polygon) { stroke-dashoffset: 0; }
+/* dopo .card h3, altrimenti a parità di specificità vincerebbe il titolo oro */
+.card--light h3 { color: var(--ink); font-size: var(--step-2); margin: .3rem 0 .8rem; }
+.card--light p  { color: var(--ink-soft); }
 
 /* Photo card — foto in alto, titolo oro, testo (sezione "Il nostro spirito") */
 .card--photo {
@@ -209,19 +380,20 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
   padding: var(--card-pad) var(--card-pad) calc(var(--card-pad) + .8rem);
   box-shadow: 0 18px 40px rgba(0,0,0,.18);
 }
-.dark .card--photo:hover {
+.dark .card--photo:hover, .darker .card--photo:hover {
   background: var(--white); border-color: transparent;
   box-shadow: 0 26px 54px rgba(0,0,0,.26);
 }
 .card__media { border-radius: 16px; overflow: hidden; background: var(--bg-dark-2); }
 .card__media img { width: 100%; aspect-ratio: var(--card-ratio); object-fit: cover; }
 .card--photo h3 {
-  font-family: var(--font-serif); color: var(--gold);
-  font-size: clamp(1.45rem, 2.3vw, 1.9rem);
+  font-family: var(--font-serif); color: var(--gold-ink);   /* scheda bianca */
+  font-size: var(--step-2);
   margin: clamp(1.4rem, 2.4vw, 2rem) 0 0;
 }
+/* corpo in Manrope come tutto il resto del sito: il serif resta al titolo */
 .card--photo p {
-  font-family: var(--font-serif); color: var(--ink-soft);
+  color: var(--ink-soft);
   font-size: 1.02rem; line-height: 1.65;
   margin: clamp(.9rem, 1.6vw, 1.3rem) 0 0;
 }
@@ -229,14 +401,53 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 /* Split (image + text) */
 .split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: center; }
 .split--reverse .split__media { order: 2; }
-.split__media img { width: 100%; border-radius: 14px; box-shadow: 0 20px 50px rgba(23,27,24,.25); }
-.split h2 { font-size: clamp(1.8rem, 3.5vw, 2.7rem); margin-bottom: 1.2rem; }
+/* proporzione fissa: riserva lo spazio prima che la foto arrivi (niente salti di layout)
+   e tiene allineate le due colonne anche con sorgenti di formato diverso */
+.split__media img {
+  width: 100%; border-radius: 14px; box-shadow: 0 20px 50px rgba(23,27,24,.25);
+  aspect-ratio: 3 / 2; object-fit: cover;
+}
+.split__media--tall img { aspect-ratio: 3 / 4; }   /* foto verticali */
+/* La mappa è un iframe, non un'immagine: le regole di .split__media img non lo
+   toccano, quindi va vestito a parte. width:100% annulla il width="600" del
+   codice di incorporamento, che altrimenti sfonda la colonna. */
+.split__media--map iframe {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 3 / 2; border: 0;
+  border-radius: 14px; box-shadow: 0 20px 50px rgba(23,27,24,.25);
+}
+.split h2 { font-size: var(--step-3); margin-bottom: 1.2rem; }
 .split .eyebrow + h2 { margin-top: 0; }
 .split p + p { margin-top: 1rem; }
 
+/* Indice degli approfondimenti del programma: numerale fantasma dietro il testo.
+   È decorativo (aria-hidden nell'HTML), serve solo a rompere la monotonia di
+   sei split identici uno dopo l'altro. */
+.split__text { position: relative; }
+.split__text > *:not(.split__num) { position: relative; z-index: 1; }
+.split__num {
+  position: absolute; top: -.42em; left: -.05em; z-index: 0;
+  font-family: var(--font-serif); font-weight: 600;
+  font-size: clamp(4.5rem, 9vw, 7.5rem); line-height: 1;
+  color: var(--gold); opacity: .12;
+  pointer-events: none; user-select: none;
+}
+
+/* La foto si scopre dall'alto invece di salire in dissolvenza: il contenitore
+   .reveal viene neutralizzato, altrimenti sarebbero due movimenti sovrapposti. */
+.split__media.reveal { opacity: 1; transform: none; transition: none; }
+.split__media.reveal img { clip-path: inset(0 0 100% 0); transition: clip-path 1s var(--ease); }
+.split__media.reveal.in img { clip-path: inset(0 0 0 0); }
+
 /* Stats */
 .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; text-align: center; }
-.stat__num { font-family: var(--font-serif); font-weight: 700; color: var(--gold); font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: 1; }
+/* i numeri restano fuori dalla scala del testo: sono un elemento grafico a sé.
+   tabular-nums dà a ogni cifra la stessa larghezza, così 2500 e 3000 non ballano. */
+.stat__num {
+  font-family: var(--font-serif); font-weight: 700; color: var(--gold);
+  font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+}
 .stat__label { margin-top: .6rem; font-size: .95rem; letter-spacing: .04em; color: var(--cream-dim); text-transform: uppercase; }
 .stats--mini { grid-template-columns: repeat(5,1fr); gap: 1.2rem; }
 .stats--mini .stat__num { font-size: clamp(1.8rem,4vw,2.8rem); }
@@ -244,29 +455,38 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 
 /* Event info blocks */
 .eventinfo { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
-.eventinfo__item { border: 1px solid var(--line); border-radius: 14px; padding: 2rem 1.5rem; text-align: center; }
-.eventinfo__item h3 { color: var(--gold); font-size: 1.5rem; margin-bottom: .4rem; letter-spacing: .04em; }
+/* niente riquadri: tre colonne separate da un filetto oro, più leggere sulla pagina */
+.eventinfo__item { border-left: 1px solid var(--line); padding: .4rem 1rem; text-align: center; }
+.eventinfo__item:first-child { border-left: 0; }
+.eventinfo__item h3 { color: var(--gold); font-size: var(--step-2); margin-bottom: .4rem; letter-spacing: .04em; }
 .eventinfo__item p { color: var(--cream-dim); font-size: .95rem; }
 
 /* Category chips grid (Espositori) */
 .chips { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; }
+/* Il velo d'oro sale dal basso al passaggio del mouse. Resta volutamente una
+   velatura e non un riempimento pieno: le chip non sono link, non devono
+   promettere un clic che non c'è. */
 .chip {
   border: 1px solid var(--line); border-radius: 14px; padding: 2rem 1.5rem; text-align: center;
-  font-family: var(--font-serif); font-size: 1.5rem; color: var(--white);
-  transition: transform .3s var(--ease), background-color .3s var(--ease), border-color .3s var(--ease);
-  background: rgba(255,255,255,.02);
+  font-family: var(--font-serif); font-size: var(--step-2); color: var(--white);
+  background-color: rgba(255,255,255,.02);
+  background-image: linear-gradient(rgba(205,164,52,.18), rgba(205,164,52,.18));
+  background-repeat: no-repeat;
+  background-position: 50% 100%;
+  background-size: 100% 0;
+  transition: background-size .4s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
 }
-.chip:hover { transform: translateY(-5px); border-color: var(--gold); background: rgba(205,164,52,.07); }
+.chip:hover { background-size: 100% 100%; border-color: var(--gold); transform: translateY(-5px); }
+.chips .chip--wide { grid-column: 2; }   /* la settima chip si centra nella griglia a tre */
 
 /* Statement — testo manifesto in oro con filetti sopra e sotto */
 .section--statement { padding-block: var(--statement-space); }
 .section--statement + .section { padding-top: 0; }   /* evita che il padding della sezione seguente si sommi */
 .statement {
-  --stagger: 38ms;   /* ritardo fra una parola e la successiva */
-  --lead-in: 180ms;  /* attesa prima che parta la prima parola */
   font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(1.45rem, 3.2vw, 2.35rem);
+  font-style: italic;                              /* corsivo vero di Fraunces, non inclinato dal browser */
+  font-variation-settings: "SOFT" 25, "WONK" 1;    /* grazie più morbide + glifi calligrafici */
+  font-size: var(--step-3);
   line-height: 1.4;
   color: var(--gold);
   max-width: 52ch;
@@ -289,28 +509,30 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 .statement::after { transform: scaleX(0); transition: transform .9s var(--ease); }
 .statement.in::before { transform: scaleX(1); }
 .statement.in::after  { transform: scaleX(1); transition-delay: calc(var(--lead-in) + var(--words, 24) * var(--stagger)); }
-.statement__w {
-  display: inline-block;
+/* .word è lo span che main.js crea per ogni parola, condiviso con l'h1 dell'hero */
+.word { display: inline-block; }
+.statement .word {
   opacity: 0;
   transform: translateY(.4em);
   filter: blur(6px);
   transition: opacity .75s var(--ease), transform .75s var(--ease), filter .75s var(--ease);
   transition-delay: calc(var(--lead-in) + var(--i) * var(--stagger));
 }
-.statement.in .statement__w { opacity: 1; transform: none; filter: none; }
+.statement.in .word { opacity: 1; transform: none; filter: none; }
 
 .statement::before { margin-bottom: clamp(1.8rem, 5vw, 2.6rem); }
 .statement::after  { margin-top: clamp(1.8rem, 5vw, 2.6rem); }
 
 /* Quote */
 .quote { text-align: center; max-width: 780px; margin-inline: auto; }
-.quote blockquote { font-family: var(--font-serif); font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-style: italic; line-height: 1.3; color: var(--white); }
+.quote blockquote { font-family: var(--font-serif); font-size: var(--step-3); font-style: italic; line-height: 1.3; color: var(--white); text-wrap: balance; }
 .quote cite { display: block; margin-top: 1.4rem; font-style: normal; font-weight: 600; letter-spacing: .1em; color: var(--gold); text-transform: uppercase; font-size: .9rem; }
 
 /* =====================================================================
    CONTACT
    ===================================================================== */
 .contact-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(2rem,5vw,4rem); align-items: start; }
+.contact-grid h2 { font-size: var(--step-3); margin-bottom: 1.6rem; }
 .form { display: grid; gap: 1.2rem; }
 .form .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
 .field { display: grid; gap: .45rem; }
@@ -318,10 +540,11 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 .field input, .field textarea {
   width: 100%; padding: .9rem 1rem; border-radius: 10px;
   border: 1px solid var(--line); background: rgba(255,255,255,.04); color: var(--white);
-  font: inherit; font-size: .98rem; transition: border-color .2s var(--ease), background-color .2s var(--ease);
+  /* 1rem = 16px: sotto i 16px Safari su iOS zooma la pagina quando il campo prende il focus */
+  font: inherit; font-size: 1rem; transition: border-color .2s var(--ease), background-color .2s var(--ease);
 }
 .field textarea { min-height: 150px; resize: vertical; }
-.field input:focus, .field textarea:focus { outline: none; border-color: var(--gold); background: rgba(255,255,255,.07); }
+.field input:focus, .field textarea:focus { border-color: var(--gold); background: rgba(255,255,255,.07); }
 .form-note { font-size: .85rem; color: var(--cream-dim); }
 .form-success { display: none; padding: 1rem 1.2rem; border-radius: 10px; background: rgba(205,164,52,.15); border: 1px solid var(--gold); color: var(--white); }
 .form-success.show { display: block; }
@@ -337,9 +560,10 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 .travel { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; }
 .travel__item { text-align: center; padding: 2rem 1.5rem; }
 .travel__item .card__icon { margin-inline: auto; }
-.travel__item h3 { color: var(--gold); font-size: 1.4rem; margin-bottom: .6rem; }
+.travel__item h3 { color: var(--gold-ink); font-size: var(--step-2); margin-bottom: .6rem; }
+.dark .travel__item h3, .darker .travel__item h3 { color: var(--gold); }
 .travel__item p { color: var(--ink-soft); font-size: .98rem; }
-.dark .travel__item p { color: var(--cream-dim); }
+.dark .travel__item p, .darker .travel__item p { color: var(--cream-dim); }
 
 /* =====================================================================
    FOOTER
@@ -353,7 +577,7 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 .footer-col a { font-size: .95rem; transition: color .2s var(--ease); }
 .footer-col a:hover { color: var(--white); }
 .socials { display: flex; gap: .8rem; margin-top: 1.4rem; }
-.socials a { width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; color: var(--cream-dim); transition: all .25s var(--ease); }
+.socials a { width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; color: var(--cream-dim); transition: all .25s var(--ease); }
 .socials a:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-3px); }
 .socials svg { width: 18px; height: 18px; }
 .footer-bottom { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 1.6rem; border-top: 1px solid rgba(255,255,255,.08); font-size: .85rem; }
@@ -363,10 +587,11 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
 /* =====================================================================
    LEGAL PAGES
    ===================================================================== */
-.legal { padding-top: calc(var(--header-h) + 4rem); }
-.legal h1 { font-size: clamp(2rem,5vw,3rem); margin-bottom: 1.5rem; color: var(--white); }
-.legal h2 { font-size: 1.4rem; margin: 2.2rem 0 .8rem; color: var(--gold); }
-.legal p, .legal li { color: var(--cream-dim); }
+/* 70ch ≈ 65-75 caratteri per riga: oltre, l'occhio fatica a ritrovare il capo riga */
+.legal { padding-top: calc(var(--header-h) + 4rem); max-width: 70ch; }
+.legal h1 { font-size: var(--step-4); margin-bottom: 1.5rem; color: var(--white); }
+.legal h2 { font-size: var(--step-2); margin: 2.2rem 0 .8rem; color: var(--gold); }
+.legal p, .legal li { color: var(--cream-dim); line-height: 1.75; }
 .legal ul { list-style: disc; padding-left: 1.3rem; }
 .legal li { margin-bottom: .5rem; }
 .legal .updated { font-size: .85rem; color: var(--gold); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2rem; }
@@ -394,16 +619,37 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
   .nav {
     position: fixed; inset: 0; flex-direction: column; justify-content: center; gap: 2rem;
     background: rgba(23,27,24,.98); backdrop-filter: blur(8px);
-    transform: translateX(100%); transition: transform .4s var(--ease); z-index: 55;
+    transform: translateX(100%);
+    /* visibility toglie il menu chiuso dal tab order: senza, con Tab si finiva
+       dentro un menu invisibile. Il ritardo la spegne solo a scivolamento finito. */
+    visibility: hidden;
+    transition: transform .4s var(--ease), visibility 0s linear .4s;
+    z-index: 55;
   }
-  body.nav-open .nav { transform: none; }
+  body.nav-open .nav {
+    transform: none; visibility: visible;
+    transition: transform .4s var(--ease), visibility 0s;
+  }
+  body.nav-open { overflow: hidden; }   /* la pagina non scorre più dietro al menu */
   .nav a { font-size: 1.4rem; font-family: var(--font-serif); color: var(--white); }
   .split, .contact-grid { grid-template-columns: 1fr; }
   .split--reverse .split__media { order: 0; }
   .grid-2, .grid-3, .grid-4, .chips, .travel, .eventinfo, .stats { grid-template-columns: 1fr; }
   .grid-3, .chips, .travel { grid-template-columns: 1fr 1fr; }
   .stats { grid-template-columns: 1fr 1fr; }
+  .chips .chip--wide { grid-column: 1 / -1; }
+  /* in colonna il filetto passa da sinistra a sopra */
+  .eventinfo__item { border-left: 0; border-top: 1px solid var(--line); padding-top: 1.2rem; }
+  .eventinfo__item:first-child { border-top: 0; }
 }
+/* Bersagli touch: su schermo tattile un link deve arrivare a 44px, da mouse no.
+   Con (pointer: coarse) la correzione vale dove serve senza slabbrare il footer
+   sul desktop. */
+@media (pointer: coarse) {
+  .footer-col a, .footer-bottom nav a { display: inline-flex; align-items: center; min-height: 44px; }
+  .footer-col li { margin-bottom: 0; }
+}
+
 @media (max-width: 560px) {
   .grid-3, .chips, .travel, .stats, .stats--mini, .eventinfo { grid-template-columns: 1fr; }
   .form .row { grid-template-columns: 1fr; }
@@ -416,8 +662,14 @@ body.nav-open .nav-toggle span::after  { transform: translateY(-7px) rotate(-45d
   * { animation: none !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .statement { --stagger: 0ms; --lead-in: 0ms; }
-  .statement__w { opacity: 1; transform: none; filter: none; transition: none; }
+  .word { opacity: 1; transform: none; filter: none; transition: none; }
   .statement::before,
   .statement::after { transform: none; transition: none; }
   .scroll-cue::after { animation: none; }
+  /* senza questa riga la tendina resterebbe chiusa e le foto degli split
+     sparirebbero del tutto */
+  .split__media.reveal img { clip-path: none; transition: none; }
+  .card__icon svg :is(path, circle, line, rect, polyline, polygon) {
+    stroke-dasharray: none; stroke-dashoffset: 0; transition: none;
+  }
 }

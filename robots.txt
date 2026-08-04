@@ -1,0 +1,8 @@
+# Brixia Fly Day
+# Le pagine legali non sono bloccate qui di proposito: hanno già <meta name="robots"
+# content="noindex">, e un Disallow impedirebbe ai crawler di leggerlo.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.brixiafly.it/sitemap.xml

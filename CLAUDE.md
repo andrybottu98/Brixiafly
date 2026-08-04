@@ -14,13 +14,14 @@ I contenuti sono **in italiano**: copy, `alt`, commenti nel codice e messaggi di
 Non c'è build né test suite. Per vedere le modifiche si apre direttamente `index.html` nel browser
 (`file://` funziona: nessuna chiamata di rete, solo percorsi relativi e font da CDN).
 
-**Su questa macchina non sono installati né Node né Python** (`node`, `npx`, `python` non
-disponibili — `python.exe` è solo l'alias fittizio del Microsoft Store). Quindi:
+**Node e Python ci sono** (verificato il 2026-08-04: Node v25.8.2, Python 3.14.3 — una versione
+precedente di questo file diceva il contrario). Quindi si possono usare:
 
-- niente `npx serve`, niente `node --check`: le modifiche a JS/CSS **non sono verificabili
-  eseguendole**, vanno controllate rileggendo il codice e chiedendo all'utente di ricaricare la pagina;
-- se in futuro venisse installato uno dei due, il preview locale sarebbe `npx serve .` oppure
-  `python -m http.server 8000`.
+- `node --check assets/js/main.js` per validare la sintassi del JS dopo una modifica;
+- `npx serve .` oppure `python -m http.server 8000` per il preview su `http://` invece che `file://`.
+
+Restano comunque assenti build, bundler e test suite: la resa visiva va sempre verificata
+ricaricando la pagina nel browser.
 
 ## Architettura
 
@@ -41,10 +42,37 @@ Le due pagine legali fanno storia a sé: `<body class="dark">`, header con `scro
   (HEADER, HERO, SECTION TITLES + GRIDS, CONTACT, FOOTER, LEGAL, SCROLL REVEAL, RESPONSIVE).
   I **design token** stanno in `:root` in cima: colori, font, `--container`, `--header-h`, `--ease`.
   Usa sempre le variabili esistenti invece di riscrivere i valori esadecimali.
-- `assets/js/main.js` (~77 righe) — una IIFE con `"use strict"`, cinque blocchi indipendenti:
-  header solido allo scroll, menu mobile, split in parole dello statement, scroll reveal,
-  form contatti demo, anno nel footer. Ogni blocco fa il proprio `if (el)`: lo stesso file gira
-  su tutte le pagine, quindi **ogni nuovo blocco deve tollerare l'assenza dei suoi elementi**.
+
+  Due convenzioni da rispettare:
+
+  - **Scala tipografica** `--step-1` … `--step-6`: ogni `font-size` di titoli, lead e componenti
+    pesca da lì. Non scrivere `clamp()` nuovi né `font-size` inline nell'HTML — se serve una misura
+    che non c'è, si aggiunge un gradino, non un valore isolato. (Fuori scala di proposito solo
+    `.stat__num`, che è un elemento grafico.)
+  - **`--gold-ink` (#7A5C10) sui fondi chiari**: l'oro pieno `--gold` su crema o bianco sta a
+    1.9-2.4:1 e non è leggibile. Sui fondi scuri va invece l'oro pieno.
+  - **`.dark` e `.darker` vanno sempre scritti in coppia**: sono due fondi scuri con lo stesso
+    trattamento del testo, ma una regola scritta solo per `.dark` lascia su `.darker` il colore
+    pensato per il fondo chiaro. È già successo con `.lead` e `.section-head p`.
+- `assets/js/main.js` — una IIFE con `"use strict"`, blocchi indipendenti: header solido allo
+  scroll, menu mobile, split in parole (`.statement` e `[data-split]`), lunghezza dei tracciati
+  delle icone, video dell'hero, scroll reveal, count-up dei numeri, form contatti demo, anno nel
+  footer. Ogni blocco fa il proprio `if (el)`: lo stesso file gira su tutte le pagine, quindi
+  **ogni nuovo blocco deve tollerare l'assenza dei suoi elementi**. La variabile `reduce`
+  (`prefers-reduced-motion`) è letta una volta sola in cima e va riusata, non riletta.
+
+### Video dell'hero (solo home)
+
+`assets/video/hero-brixiafly.mp4` — 1600×900, H.264, senza audio, 7 s in loop, 1,6 MB
+(l'originale 4K è 35 MB). Tre regole da non rompere:
+
+1. **Il fermo immagine c'è sempre**: `<picture>` con AVIF/WebP/JPG dentro `.hero__bg`. È lui
+   l'elemento LCP, il video ci si sovrappone in dissolvenza.
+2. **La sorgente sta in `data-video`, non in `src`**: il JS la copia in `src` solo se non c'è
+   reduced motion, lo schermo è ≥821px e il browser non segnala `saveData`. Mettere `src` o
+   `autoplay` nell'HTML farebbe scaricare 1,6 MB anche a chi non li vedrà mai.
+3. **Il pulsante `.hero__motion` non è decorativo**: un video che parte da solo e dura più di
+   5 secondi deve poter essere fermato (WCAG 2.2.2). Compare via JS solo a video avviato.
 
 ### Sistema di layout
 
@@ -96,7 +124,12 @@ Non aggiungere media query sparse nel file.
 Da sostituire prima di andare online — non sono dimenticanze da "correggere" in autonomia,
 ma segnaposto in attesa di materiale reale:
 
-- `assets/img/` contiene solo SVG segnaposto (`hero-home`, `hero-inner`, `placeholder-*`, `map`).
+- **La home ha le foto vere**; le pagine interne no. Restano segnaposto `hero-inner.svg`
+  (5 pagine), `placeholder-wide.svg` (3), `placeholder-tall.svg` e `map.svg`.
+  Le foto reali (`hero-home`, `card-missione`, `card-esperienza`, `card-comunita`,
+  `evento-fiume`) sono in tre formati AVIF/WebP/JPG serviti con `<picture>`, larghezza
+  tarata sulla resa effettiva: **900px per le card** (che renderizzano a ~300 CSS px),
+  1200px per gli split, 1920px per il fermo immagine dell'hero. Non serve di più.
 - Il form contatti è **dimostrativo**: `main.js` intercetta il submit, mostra `.form-success` e
   resetta i campi. Nessun backend, nessuna email inviata.
 - Privacy e Cookie Policy contengono testo generico non validato legalmente.

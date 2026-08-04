@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.brixiafly.biz)",
+      "Read(//c/Users/Bottu/.claude/skills/ui-ux-pro-max/**)",
+      "Read(//c/Users/Bottu/.claude/skills/ui-ux-pro-max/data/**)",
+      "WebFetch(domain:fonts.googleapis.com)",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"outdoor heritage fly fishing festival event landing page elegant editorial dark\" --design-system -p \"Brixia Fly Day\" -f markdown)",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"focus states skip links keyboard color contrast\" --domain ux -n 5)",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"mobile keyboards input zoom font size\" --domain ux -n 3)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/check.py\")",
+      "Bash(echo \"exit=$?\")",
+      "Bash(node --check assets/js/main.js)",
+      "Bash(rm \"C:/Users/Bottu/.claude/projects/d--Progetti-brixiafly-clone/memory/brixiafly-fix-p0-pendenti.md\" && ls \"C:/Users/Bottu/.claude/projects/d--Progetti-brixiafly-clone/memory/\")",
+      "Read(//c/Users/Bottu/.claude/projects/d--Progetti-brixiafly-clone/memory/**)",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"line height line length readability hierarchy scale\" --domain ux -n 4)",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"animation motion performance transform reduced motion excessive\" --domain ux -n 5)",
+      "Bash(PYTHONIOENCODING=utf-8 python -c ' *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(PYTHONIOENCODING=utf-8 python scripts/search.py \"touch target size spacing tap mobile\" --domain ux -n 3)",
+      "Bash(PYTHONIOENCODING=utf-8 python -c \"import PIL; print\\('Pillow', PIL.__version__\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/analyze.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/crop_test.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/build_assets.py\")",
+      "Bash(awk '{print $5, $9}')",
+      "Bash(git check-ignore *)",
+      "Bash(awk '$5 > 0 {printf \"  %-34s %7.0f KB\\\\n\", $9, $5/1024}')",
+      "Bash(ffprobe -v error -show_entries format=duration -show_entries stream=codec_name,width,height -of default=noprint_wrappers=1 assets/video/hero-brixiafly.mp4)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/crop_home.py\")",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/crop_home.py\" comunita=0.12)",
+      "Bash(PYTHONIOENCODING=utf-8 python \"C:/Users/Bottu/AppData/Local/Temp/claude/d--Progetti-brixiafly-clone/86d4a717-355f-4ec3-8e18-28e77a22f242/scratchpad/build_home.py\")",
+      "Bash(rm -f assets/img/favicon-16.png assets/img/hero-home.svg assets/img/placeholder-square.svg)",
+      "Bash(awk '{printf \"  %-34s %6.1f MB\\\\n\", $9\" \"$10, $5/1048576}')",
+      "Bash(rm -f \"assets/img/chi siamo.jpg\" assets/img/Calvisano_panorama.jpg)",
+      "Bash(grep -n 'src=\"[^\"]*\\\\\\\\\\\\\\\\' *.html)",
+      "Bash(rm -f assets/img/map.svg)",
+      "Bash(ffmpeg -v error -i assets/img/hero-chi-siamo.avif -vf crop=560:315:700:400 -y __TRACKED_VAR__/cmp-34.png)",
+      "Bash(ffmpeg -v error -i __TRACKED_VAR__/hcs-42.avif -vf crop=560:315:700:400 -y __TRACKED_VAR__/cmp-42.png)",
+      "Bash(awk '{printf \"  %-32s %4d KB\\\\n\", $9, $5/1024}')"
+    ]
+  }
+}

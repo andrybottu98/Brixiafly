@@ -5,13 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contatti | Brixia Fly Official</title>
   <meta name="description" content="Scrivici: hai domande, suggerimenti o vuoi partecipare al Brixia Fly Day? Contattaci.">
+  <link rel="canonical" href="https://www.brixiafly.it/contatti.html">
+
+  <!-- Icone -->
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#1f2521">
+
+  <!-- Anteprima nelle condivisioni -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Brixia Fly Day">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:title" content="Contatti — Brixia Fly Day">
+  <meta property="og:description" content="Hai domande, suggerimenti o vuoi partecipare al Brixia Fly Day? Scrivici.">
+  <meta property="og:url" content="https://www.brixiafly.it/contatti.html">
+  <meta property="og:image" content="https://www.brixiafly.it/assets/img/og-brixiafly.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Il marchio del Brixia Fly Day: la Vittoria Alata di Brescia che lancia a mosca">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
   <script src="assets/js/main.js" defer></script>
 </head>
 <body>
+
+  <a class="skip-link" href="#contenuto">Salta al contenuto</a>
 
   <header class="site-header">
     <div class="container">
@@ -28,13 +52,19 @@
     </div>
   </header>
 
-  <main>
+  <main id="contenuto">
     <section class="hero hero--inner">
-      <div class="hero__bg"><img src="assets/img/hero-inner.svg" alt=""></div>
+      <div class="hero__bg">
+        <picture>
+          <source srcset="assets/img/hero-contatti.avif" type="image/avif">
+          <source srcset="assets/img/hero-contatti.webp" type="image/webp">
+          <img src="assets/img/hero-contatti.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
       <div class="container">
         <div class="hero__inner">
           <span class="eyebrow reveal in">Scrivici</span>
-          <h1 class="reveal in" data-delay="1">Contatti</h1>
+          <h1 class="reveal in" data-delay="1" data-split>Contatti</h1>
           <p class="hero__subtitle reveal in" data-delay="2">Hai domande, suggerimenti o vuoi partecipare? Non esitare a contattarci.</p>
         </div>
       </div>
@@ -55,7 +85,7 @@
           <!-- FORM -->
           <div class="reveal">
             <span class="eyebrow">Contattaci</span>
-            <h2 style="font-size:clamp(1.8rem,3.5vw,2.6rem);color:var(--white);margin-bottom:1.6rem">Inviaci un messaggio</h2>
+            <h2>Inviaci un messaggio</h2>
             <form class="form" novalidate>
               <div class="row">
                 <div class="field">

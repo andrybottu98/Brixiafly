@@ -27,3 +27,8 @@ npm-debug.log*
 
 # Immagini originali non ottimizzate (cartella di lavoro, non va pubblicata)
 assets/img/_originali/
+
+# Materiale sorgente fornito dal cliente: foto, loghi e video originali (~2,3 GB).
+# Da qui si pescano i file, che vanno poi ottimizzati e salvati in assets/img/.
+# Fuori dal repository: i .mp4/.mov singoli superano i 500 MB.
+File del sito/
